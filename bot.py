@@ -1,17 +1,20 @@
-from aiogram import Bot, Dispatcher, executor, types
-import logging
 import os
+import asyncio
+from aiogram import Bot, Dispatcher, types
+from aiogram.enums import ParseMode
+from aiogram.types import Message
+from aiogram.filters import Command
 
-logging.basicConfig(level=logging.INFO)
+TOKEN = os.getenv("API_TOKEN")
+bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
+dp = Dispatcher()
 
-API_TOKEN = os.getenv("API_TOKEN")
+@dp.message(Command("start"))
+async def start(message: Message):
+    await message.answer("Бот работает ✅ на Render!")
 
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+async def main():
+    await dp.start_polling(bot)
 
-@dp.message_handler(commands=['start'])
-async def welcome(message: types.Message):
-    await message.reply("Привет! Я бот и работаю на Railway!")
-
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+if __name__ == "__main__":
+    asyncio.run(main())
